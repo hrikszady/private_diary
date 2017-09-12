@@ -85,10 +85,10 @@ MEDIA_ROOT = BASE_DIR + '/media'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'diary',
-        'USER': 'hriks',
-        'PASSWORD': 'hriks',
-        'HOST': 'localhost',
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['USERNAME'],
+        'PASSWORD': os.environ['PASSWORD'],
+        'HOST': os.environ['HOST'],
         'PORT': '5432',
     }
 }
