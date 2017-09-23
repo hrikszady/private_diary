@@ -41,9 +41,15 @@ pip install -r requirements.txt
 Postgresql must be installed.
 if not, install postgres and its server-side extensions
 
+```
 export DB_NAME="Your's DATABASE NAME"
+```
+```
 export USERNAME="Your's USERNAME"
+```
+```
 export PASSWORD="Your's PASSWORD"
+```
 if running database on local the use this command
 ```
 export HOST="localhost"
