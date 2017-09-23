@@ -151,7 +151,8 @@ class Donation(models.Model):
     Records donation made by user
     """
     user = models.ForeignKey('user')
-    transaction_id = models.CharField(blank=False, default=None, max_length=64)
+    transaction_id = models.CharField(
+        blank=False, default=None, max_length=64)
     amount = models.FloatField(blank=False, default=0)
     comments = models.TextField()
     transaction_mode = models.CharField(
