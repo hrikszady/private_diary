@@ -55,7 +55,13 @@ if running database on local then use this command
 export HOST="localhost"
 ```
 else
+```
 export HOST="Your's host for database path"
+```
+also developer need to export their secret key
+```
+export SECRET_KEY="Your's Secret Key"
+```
 Run app by 
 ```
 python manage.py runserver
