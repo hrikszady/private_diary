@@ -50,7 +50,7 @@ export USERNAME="Your's USERNAME"
 ```
 export PASSWORD="Your's PASSWORD"
 ```
-if running database on local the use this command
+if running database on local then use this command
 ```
 export HOST="localhost"
 ```
