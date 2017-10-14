@@ -51,7 +51,7 @@ class User(models.Model):
                 users = User.objects.filter(reference_no=temp_ref)
                 while users.exists():
                     temp_ref = get_random_string(
-                        10, allowed_chars='ABCDEFGHITUVWXYZ0123456789') # noqa
+                        10, allowed_chars='ABCDEFGHITUVWXYZ0123456789')   # noqa
                 self.reference_no = temp_ref
             self.password = self.get_hashed_password(str(self.password))
         super(User, self).save(*args, **kwargs)

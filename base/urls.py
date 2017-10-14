@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView   # noqa
 from . import views
 
 
