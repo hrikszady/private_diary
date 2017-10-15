@@ -16,11 +16,14 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls.static import static
-
+from django.contrib.auth import views
+from base import forms
 import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('base.urls')),
+    url(r'^login/', views.login, {'template_name': 'login.html', 'authentication_form': forms.LoginForm}, name='login'), # noqa
+    url(r'^logout/', views.logout, {'next_page': '/login'}),
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
