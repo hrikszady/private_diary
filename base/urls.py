@@ -1,8 +1,10 @@
 from django.conf.urls import url
 from django.views.generic import TemplateView   # noqa
-from . import views
+import views as base_views
 
 
 urlpatterns = [
-    url(r'^', views.HomePageView.as_view()),
+    url(r'^account/user/login', base_views.login, name='login'), # noqa
+    url(r'^account/user/signup', base_views.signup, name='signup'), # noqa
+    url(r'^', base_views.HomePageView.as_view()),
 ]

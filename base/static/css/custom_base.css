@@ -1,0 +1,11 @@
+#header {width: auto;height: 37px;padding: 4px 40px;background: teal;line-height: 40px;color: #ffc;overflow: hidden;}
+#header a:link, #header a:visited {color: #fff;}
+#header a:focus , #header a:hover {text-decoration: underline;}
+div.breadcrumbs {background: darkslategrey;padding: 1px 44px;border: none;font-size: 14px;color: #c4dce8;text-align: left;}
+div.breadcrumbs a {color: #fff;}
+div.breadcrumbs a:focus, div.breadcrumbs a:hover {color: #c4dce8;}
+.module h2, .module caption, .inline-group h2 {margin: 0;padding: 4px;font-weight: 400;font-size: 13px;text-align: left;background: teal;color: #fff;}
+#user-tools {float: right;padding: 0;margin: 0 0 0 20px;font-weight: 300;font-size: 13px;letter-spacing: 0.5px;text-transform: uppercase;text-align: right;}
+#content-related .module h2 {background: teal;padding: 1px;margin-bottom: 16px;border-bottom: 1px solid #eaeaea;font-size: 18px;color: #fff;}
+.login #header {height: auto;padding: 0px 145px;}
+
