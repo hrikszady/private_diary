@@ -91,3 +91,4 @@ admin.site.register(ParentalInfo, ParentalInfoAdmin)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(Expense, ExpenseAdmin)
 admin.site.register(Memo, MemoAdmin)
+admin.site.index_title = 'Diary'
