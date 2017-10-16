@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block title %} Diary | {{ site_title }}{% endblock %}
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="/static/css/custom_base.css">
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+	<a href="{% url 'admin:index' %}">
+		<img src="{% static 'img/logo.png' %}" style="width:1	60px;height:45px;"/>
+		<span style="color: white"></span>
+	</a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
