@@ -1,9 +1,9 @@
 {% extends "admin/base.html" %}
 {% load static %}
-{% block title %} Diary | Login{% endblock %}
+{% block title %} Diary | SignUp{% endblock %}
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="/static/css/custom_base.css">
-<link rel="stylesheet" type="text/css" href="/static/css/user-login.css">
+<link rel="stylesheet" type="text/css" href="/static/css/sign-up.css">
 {% endblock %}
 
 {% block branding %}
@@ -15,20 +15,20 @@
     </h1>
 {% endblock %}
 {% block content %}
-    <div class="colM user-login">
-        <div id="content-main" class="w3-card login-card">
-            <div class="title"> Login</div>
+    <div class="colM signup-login">
+        <div id="content-main" class="w3-card signup-card">
+            <div class="title"> SignUp</div>
             <form action="" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="submit-row">
-                <label>&nbsp;</label><input type="submit" value="Log in" />
+                <label>&nbsp;</label><input type="submit" value="SignUp" />
                 </div>
             </form>
             <br><br>
             <div class="footer">
-                <span class="sign-up"><a href="/account/user/signup" >Signup</a></span>
-                <span class="admin-login"><a href="/account/admin" >Admin Login</a></span>
+                <span class="sign-up"><a href="/account/user/login/" >User Login</a></span>
+                <span class="admin-login"><a href="/account/admin/" >Admin Login</a></span>
             </div>
         </div>
         <br class="clear" />

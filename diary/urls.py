@@ -17,13 +17,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-from base import views as base_views
+#from base import views as base_views
 from base import forms
 import settings
 
 urlpatterns = [
     url(r'^account/admin/', admin.site.urls),
-    url(r'^account/user/login', base_views.login, name='login'), # noqa
     url(r'^account/user/logout/', auth_views.logout, {'next_page': '/login'}),
     url(r'^', include('base.urls')),
 ] + static(
