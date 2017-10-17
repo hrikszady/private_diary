@@ -17,11 +17,11 @@ class HomePageView(TemplateView):
 @csrf_exempt
 def login(request, methods="GET"):
     form = LoginForm()
-    return render(request, 'login.html', {'form':form})
+    return render(request, 'login.html', {'form': form})
 
 
 @get
 @csrf_exempt
 def signup(request, methods="GET"):
-	form = SignUPForm()
-	return render(request, 'signup.html', {'form':form})
+    form = SignUPForm()
+    return render(request, 'signup.html', {'form': form})
