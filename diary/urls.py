@@ -17,8 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-#from base import views as base_views
-from base import forms
+# from base import views as base_views
 import settings
 
 urlpatterns = [
