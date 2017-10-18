@@ -24,4 +24,7 @@ def login(request, methods="GET"):
 @csrf_exempt
 def signup(request, methods="GET"):
     form = SignUPForm()
-    return render(request, 'signup.html', {'form': form})
+    signup = True
+    return render(request, 'signup.html', {
+        'form': form, 'signup': signup
+    })
