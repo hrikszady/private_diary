@@ -1,5 +1,4 @@
 from django import forms
-import datetime 
 
 
 class LoginForm(forms.Form):

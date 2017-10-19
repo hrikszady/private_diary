@@ -179,25 +179,25 @@ class LastAction(models.Model):
 class Reference_Number(models.Model):
     """Stores each reference_no alloted details"""
     reference_no = models.CharField(max_length=15)
-    user = models.ForeignKey('User', blank=True)
-    guest = models.ForeignKey('Guest', blank=True)
+    user = models.ForeignKey('User', blank=True, null=True)
+    guest = models.ForeignKey('Guest', blank=True, null=True)
     genration_date = models.DateTimeField(auto_now_add=True)
     purpose = models.CharField(max_length=128)
 
 
 class Guest(models.Model):
     """Records Guest details"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     reference_no = models.CharField(max_length=15)
-    ip_address = models.CharField(max_length=32)
+    ip_address = models.CharField(max_length=32, blank=True)
     created = models.DateTimeField(auto_now_add=False)
 
     def save(self, *args, **kwargs):
         try:
-            current = User.objects.get(
-                reference_no=self.reference_no)
+            Guest.objects.get(id=self.id)
+            self.reference_no = self.get_reference_no()
         except Guest.DoesNotExist:
-            if self.reference_no is None:
-                self.reference_no = self.get_reference_no()
+            self.reference_no = self.get_reference_no()
         super(Guest, self).save(*args, **kwargs)
 
     def get_reference_no(self):
@@ -209,6 +209,6 @@ class Guest(models.Model):
             reference_no = get_random_string(
                 15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
         Reference_Number.objects.create(
-            guest=self, reference_no=self.reference_no,
+            guest=self, reference_no=reference_no,
             purpose='User Registration')
         return reference_no
