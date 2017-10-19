@@ -12,6 +12,7 @@ from base.models import User
 
 
 class HomePageView(TemplateView):
+    @guest
     def get(self, request, *args, **kwargs):
         return render(request, 'index.html', None)
 
@@ -53,7 +54,6 @@ def profile(request, methods="GET"):
 @csrf_exempt
 def signupsubmit(request, data):
     form = LoginForm()
-
     return render(request, 'signup.html', {
         'form': form, 'signup': signup
     })

@@ -1,7 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from base.models import User, Guest, Reference_Number
-import datetime
+from datetime import datetime
 
 
 @csrf_exempt
@@ -39,16 +39,13 @@ def create_guest(ip_address):
     if created:
         guest.ip_address = ip_address
         guest.save()
-        Reference_Number.objects.create(
-            guest=guest, reference_no=guest.reference_no,
-            purpose='Guest Visit')
     return guest.reference_no
 
 
 def get_ip_address(self):
-    http_ip = self.META.get('HTTP_X_FORWARDED_FOR')
+    http_ip = self.request.META.get('HTTP_X_FORWARDED_FOR')
     if http_ip:
         ip_address = http_ip.split(',')[0]
     else:
-        ip_address = self.META.get('REMOTE_ADDR')
+        ip_address = self.request.META.get('REMOTE_ADDR')
     return ip_address

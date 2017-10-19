@@ -36,8 +36,9 @@ def bad_request(request):
 def guest(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         ip_address = get_ip_address(request)
-        if 'user_id' not in request.session.keys():
-            request.session['guest_id'] = create_guest(ip_address)
+        #request.request.session.flush()
+        if 'guest_id' not in request.request.session.keys():
+            request.request.session['guest_id'] = create_guest(ip_address)
         return f(request, *args, **kwargs)
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
