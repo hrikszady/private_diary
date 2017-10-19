@@ -3,7 +3,9 @@ from __future__ import unicode_literals
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from base.decorator import (get_method as get, post_method as post)
+from base.decorator import (
+    get_method as get, post_method as post, guest
+)
 from base.forms import (LoginForm, SignUPForm, ProfileForm)
 from base.models import User
 # from methods import *

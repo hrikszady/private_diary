@@ -43,3 +43,12 @@ def create_guest(ip_address):
             guest=guest, reference_no=guest.reference_no,
             purpose='Guest Visit')
     return guest.reference_no
+
+
+def get_ip_address(self):
+    http_ip = self.META.get('HTTP_X_FORWARDED_FOR')
+    if http_ip:
+        ip_address = http_ip.split(',')[0]
+    else:
+        ip_address = self.META.get('REMOTE_ADDR')
+    return ip_address

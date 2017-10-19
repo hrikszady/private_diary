@@ -193,7 +193,7 @@ class Guest(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            current = User.objects.get(
+            User.objects.get(
                 reference_no=self.reference_no)
         except Guest.DoesNotExist:
             if self.reference_no is None:
