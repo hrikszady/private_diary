@@ -12,7 +12,7 @@ class User(models.Model):
     and providing offers and premium facility.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    reference_no = models.CharField(default="None", max_length=10)
+    reference_no = models.CharField(default="None", max_length=15)
     username = models.CharField(
         default=None, max_length=10)
     password = models.CharField(max_length=512)
@@ -46,13 +46,7 @@ class User(models.Model):
                 self.password = self.get_hashed_password(str(self.password))
         except User.DoesNotExist:
             if self.reference_no == "None":
-                temp_ref = get_random_string(
-                    10, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
-                users = User.objects.filter(reference_no=temp_ref)
-                while users.exists():
-                    temp_ref = get_random_string(
-                        10, allowed_chars='ABCDEFGHITUVWXYZ0123456789')   # noqa
-                self.reference_no = temp_ref
+                self.reference_no = self.get_reference_no()
             self.password = self.get_hashed_password(str(self.password))
         super(User, self).save(*args, **kwargs)
 
@@ -72,10 +66,23 @@ class User(models.Model):
         return bcrypt.hashpw(
             password, str(self.password)) == str(self.password)
 
+    def get_reference_no(self):
+        reference_no = get_random_string(
+            15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
+        while (
+            Reference_Number.objects.filter(
+                reference_no=reference_no)).exists():
+            reference_no = get_random_string(
+                15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
+        Reference_Number.objects.create(
+            user=self, reference_no=self.reference_no,
+            purpose='User Registration')
+        return reference_no
+
 
 class Academic(models.Model):
     """Stores for Academics details for registered users"""
-    user = models.ForeignKey('user')
+    user = models.ForeignKey('User')
     year_of_passing = models.DateTimeField(null=True, blank=True)
     percentage = models.FloatField(default=0)
     institute = models.CharField(default=None, max_length=256)
@@ -88,7 +95,7 @@ class ParentalInfo(models.Model):
     users who wish to create resume, they have to fill
     these extra options
     """
-    user = models.ForeignKey('user')
+    user = models.ForeignKey('User')
     fathers_name = models.CharField(blank=False, max_length=32)
     mothers_name = models.CharField(blank=True, max_length=32)
     fathers_phone = models.CharField(
@@ -102,7 +109,7 @@ class Document(models.Model):
     Stores Documents for users, if case they need
     user can download their documents
     """
-    user = models.ForeignKey('user')
+    user = models.ForeignKey('User')
     document_type = models.CharField(blank=False, max_length=16)
     document_name = models.CharField(blank=False, max_length=64)
     URGENCY_CHOICES = [
@@ -119,7 +126,7 @@ class Expense(models.Model):
     """
     User can keep track for their expenses
     """
-    user = models.ForeignKey('user')
+    user = models.ForeignKey('User')
     amount = models.FloatField(default=0)
     expense_date = models.DateTimeField(auto_now_add=False)
     CATEGORY_CHOICES = [
@@ -140,7 +147,7 @@ class Memo(models.Model):
     """
     Create a memo for works
     """
-    user = models.ForeignKey('user')
+    user = models.ForeignKey('User')
     memo = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     tag = models.CharField(blank=True, null=True, max_length=8)
@@ -150,7 +157,7 @@ class Donation(models.Model):
     """
     Records donation made by user
     """
-    user = models.ForeignKey('user')
+    user = models.ForeignKey('User')
     transaction_id = models.CharField(
         blank=False, default=None, max_length=64)
     amount = models.FloatField(blank=False, default=0)
@@ -160,10 +167,48 @@ class Donation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
-class LastAction(object):
+class LastAction(models.Model):
     """
     Tracks user's LastAction
     """
-    user = models.ForeignKey('user')
+    user = models.ForeignKey('User')
     action = models.CharField(blank=False, max_length=128)
     created = models.DateTimeField(auto_now_add=True)
+
+
+class Reference_Number(models.Model):
+    """Stores each reference_no alloted details"""
+    reference_no = models.CharField(max_length=15)
+    user = models.ForeignKey('User', blank=True)
+    guest = models.ForeignKey('Guest', blank=True)
+    genration_date = models.DateTimeField(auto_now_add=True)
+    purpose = models.CharField(max_length=128)
+
+
+class Guest(models.Model):
+    """Records Guest details"""
+    reference_no = models.CharField(max_length=15)
+    ip_address = models.CharField(max_length=32)
+    created = models.DateTimeField(auto_now_add=False)
+
+    def save(self, *args, **kwargs):
+        try:
+            current = User.objects.get(
+                reference_no=self.reference_no)
+        except Guest.DoesNotExist:
+            if self.reference_no is None:
+                self.reference_no = self.get_reference_no()
+        super(Guest, self).save(*args, **kwargs)
+
+    def get_reference_no(self):
+        reference_no = get_random_string(
+            15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
+        while (
+            Reference_Number.objects.filter(
+                reference_no=reference_no)).exists():
+            reference_no = get_random_string(
+                15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
+        Reference_Number.objects.create(
+            guest=self, reference_no=self.reference_no,
+            purpose='User Registration')
+        return reference_no

@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-from base.models import User
+from base.models import User, Guest, Reference_Number
+import datetime
 
 
 @csrf_exempt
@@ -30,3 +31,15 @@ def logout(self):
     except KeyError:
         pass
     return True, self
+
+
+def create_guest(ip_address):
+    now = datetime.now()
+    guest, created = Guest.objects.get_or_create(created=now)
+    if created:
+        guest.ip_address = ip_address
+        guest.save()
+        Reference_Number.objects.create(
+            guest=guest, reference_no=guest.reference_no,
+            purpose='Guest Visit')
+    return guest.reference_no
