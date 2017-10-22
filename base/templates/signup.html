@@ -19,7 +19,7 @@
         <div class="colM signup-login">
             <div id="content-main" class="w3-card signup-card">
                 <div class="title"> SignUp</div>
-                <form action="" method="post">
+                <form action="register?id={{request.session.guest_id}}" method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <div class="submit-row">

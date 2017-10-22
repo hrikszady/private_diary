@@ -14,14 +14,13 @@ class User(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     reference_no = models.CharField(default="None", max_length=15)
     username = models.CharField(
-        default=None, max_length=10)
-    password = models.CharField(max_length=512)
-    name = models.CharField(max_length=20)
-    phone_no = models.CharField(
-        default=0000000000, blank=False, max_length=10)
+        null=True, max_length=10, blank=True)
+    password = models.CharField(max_length=32, null=True, blank=True)
+    name = models.CharField(max_length=20, null=True, blank=True)
+    phone_no = models.CharField(max_length=10)
     alternate_phone_no = models.CharField(
-        default=0000000000, blank=True, max_length=10)
-    std_code = models.IntegerField(default=000000)
+        blank=True, max_length=10, null=True)
+    std_code = models.IntegerField(null=True, blank=True)
     COUNTRY_CHOICES = [
         ("india", "IND"), ("pakistan", "PAK"), ("bangaldesh", "BAN"),
         ("srilanka", "SRILNKA"), ("unitedstates", "US"), ("nepal", "NP"),
@@ -29,11 +28,11 @@ class User(models.Model):
     ]
     country = models.CharField(
         default="Select", choices=COUNTRY_CHOICES, max_length=128)
-    email = models.CharField(max_length=32)
-    alternate_email = models.CharField(max_length=32)
-    pincode = models.IntegerField(blank=True, default="Not Provided")
-    address = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
+    email = models.CharField(max_length=64, blank=True, null=True)
+    alternate_email = models.CharField(max_length=64, null=True, blank=True)
+    pincode = models.IntegerField(blank=True, null=True)
+    address = models.TextField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     is_phone_no_verified = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
     hobbies = models.TextField(null=True, blank=True)

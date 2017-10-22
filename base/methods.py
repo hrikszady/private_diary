@@ -1,7 +1,8 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-from base.models import User, Guest, Reference_Number
+from base.models import User, Guest
 from datetime import datetime
+from django.http import JsonResponse
 
 
 @csrf_exempt
@@ -49,3 +50,24 @@ def get_ip_address(self):
     else:
         ip_address = self.request.META.get('REMOTE_ADDR')
     return ip_address
+
+
+def convert_to_dict(self):
+    if self.method == 'POST':
+        data = dict(self.POST)
+        self.POST = {}
+        return self, data
+    else:
+        return JsonResponse({'Error': 'Bas Request'}, status=403)
+
+
+def save_registration_form(self):
+    user, created = User.objects.get_or_create(
+        phone_no=self['phone'],
+        email=self['email'])
+    if not created:
+        return created, 'User already exists with phone email combination'
+    import pdb; pdb.set_trace()
+
+
+    return None
