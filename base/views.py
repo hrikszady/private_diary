@@ -8,7 +8,8 @@ from base.decorator import (
 )
 from base.forms import (LoginForm, SignUPForm, ProfileForm)
 from base.models import User
-# from methods import *
+from base.methods import save_registration_form
+from django.contrib import messages
 
 
 class HomePageView(TemplateView):
@@ -54,6 +55,13 @@ def profile(request, methods="GET"):
 @csrf_exempt
 def signupsubmit(request, data):
     form = LoginForm()
+    import pdb; pdb.set_trace()
+    registration_status, registration_message = save_registration_form(data)
+    if registration_status:
+        render(request, 'login.html', {'form': form})
+    messages.error(
+        request,
+        'Sorry! Unable to register' % registration_message)
     return render(request, 'signup.html', {
         'form': form, 'signup': signup
     })

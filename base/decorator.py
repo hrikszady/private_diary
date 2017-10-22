@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.http import JsonResponse
-from base.methods import create_guest, get_ip_address
+from base.methods import (
+    create_guest, get_ip_address, convert_to_dict
+)
 
 
 def get_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
@@ -18,7 +20,7 @@ def post_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         if request.method != 'POST':
             return bad_request(request)
-        data = request.POST
+        request, data = convert_to_dict(request)
         return f(request, data, *args, **kwargs)
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
@@ -36,7 +38,6 @@ def bad_request(request):
 def guest(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         ip_address = get_ip_address(request)
-        #request.request.session.flush()
         if 'guest_id' not in request.request.session.keys():
             request.request.session['guest_id'] = create_guest(ip_address)
         return f(request, *args, **kwargs)

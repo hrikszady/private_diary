@@ -86,7 +86,8 @@ class MemoAdmin(admin.ModelAdmin):
 
 class GuestAdmin(admin.ModelAdmin):
     list_display = (
-        'reference_no', 'ip_address', 'created'
+        'reference_no', 'ip_address', 'created',
+#        'active_session'
     )
     search_fields = ('reference_no', 'ip_address')
     ordering = ('-created',)
@@ -95,6 +96,13 @@ class GuestAdmin(admin.ModelAdmin):
 
     def end_session(self, request, queryset):
         request.session.pop('guest_id')
+
+#    def active_session(self, guest_object):
+#        import pdb; pdb.set_trace()
+#        if request.session['guest_id'] == self.guest_object:
+#            return 'Yes'
+#        else:
+#            return 'No'
 
 
 class Reference_NumberAdmin(admin.ModelAdmin):
