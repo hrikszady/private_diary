@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.http import JsonResponse
 from base.methods import (
-    create_guest, get_ip_address, convert_to_dict
+    create_guest, get_ip_address, FormData
 )
 
 
@@ -20,7 +20,8 @@ def post_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         if request.method != 'POST':
             return bad_request(request)
-        request, data = convert_to_dict(request)
+        data = FormData(request)
+        request.POST = request.POST = {}
         return f(request, data, *args, **kwargs)
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__

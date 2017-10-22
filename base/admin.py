@@ -95,6 +95,7 @@ class GuestAdmin(admin.ModelAdmin):
     actions = ['end_session']
 
     def end_session(self, request, queryset):
+        #self.session.flush()
         request.session.pop('guest_id')
 
 #    def active_session(self, guest_object):
