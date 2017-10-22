@@ -21,7 +21,7 @@ def post_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
         if request.method != 'POST':
             return bad_request(request)
         data = FormData(request)
-        request.POST = request.POST = {}
+        request.POST = {}
         return f(request, data, *args, **kwargs)
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__

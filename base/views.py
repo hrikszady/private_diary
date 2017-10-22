@@ -8,7 +8,7 @@ from base.decorator import (
 )
 from base.forms import (LoginForm, SignUPForm, ProfileForm)
 from base.models import User
-from base.methods import save_registration_form
+from base.methods import save_registration_form, verify_user
 from django.contrib import messages
 
 
@@ -55,9 +55,12 @@ def profile(request, methods="GET"):
 @csrf_exempt
 def signupsubmit(request, data):
     form = LoginForm()
-    import pdb; pdb.set_trace()
     registration_status, registration_message = save_registration_form(data)
     if registration_status:
+        form.fields.update({
+            'username': data.username,
+            'password': data.password
+        })
         render(request, 'login.html', {'form': form})
     messages.error(
         request,
@@ -65,3 +68,11 @@ def signupsubmit(request, data):
     return render(request, 'signup.html', {
         'form': form, 'signup': signup
     })
+
+
+@post
+@csrf_exempt
+def login_api(request, data):
+    is_user, user = verify_user(data, request)
+    print is_user, user
+    return None
