@@ -5,23 +5,24 @@ from datetime import datetime
 
 
 @csrf_exempt
-def verify_user(self):
-    if self.POST:
-        username = self.POST.get('username', '')
-        password = self.POST.get('password', '')
+def verify_user(self, request):
+    password = self.password
+    try:
+        user = User.objects.get(username=self.username)
+    except User.DoesNotExist:
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(phone_no=self.phone)
         except User.DoesNotExist:
             messages.error(
-            	self, 'Invalid User ID. Agent doesnot \
+                request, 'Invalid User ID. Agent doesnot\
                 Exists! Please Try Again.')
             return False, self
-        if user.check_password(str(password)):
-            return True, self
-        else:
-            messages.error(self, 'Invalid Password ! Please Try Again.')
-            return False, self
-    messages.error(self, 'Verification Failed')
+    if user.check_password(str(password)):
+        return True, user
+    else:
+        messages.error(request, 'Invalid Password ! Please Try Again.')
+        return False, self
+    messages.error(request, 'Verification Failed')
     return False, self
 
 
@@ -72,10 +73,15 @@ class FormData(object):
 
 def save_registration_form(self):
     user, created = User.objects.get_or_create(
-        phone_no=self.phone, email=self.email,
-        username=self.username)
+        phone_no=self.phone)
     if not created:
-        return created, 'User already exists with phone email combination.'
+        return created, 'User already exists with %s.' % self.phone
+    if User.objects.filter(email=self.email).exists():
+        user.delete()
+        return False, 'User already exists with %s.' % self.email
+    if User.objects.filter(email=self.username).exists():
+        user.delete()
+        return False, 'User already exists with %s.' % self.username
     try:
         user.password = self.password
         user.name = self.name
@@ -83,7 +89,8 @@ def save_registration_form(self):
         user.country = self.country
         user.is_approved_terms_and_conditions = self.terms
         user.save()
-        return created, 'User Registered! Please Verify yours email and phone.'
+        message = 'User created! Please Verify yours email and phone.'
+        return created, message
     except Exception, e:
         user.delete()
         return False, e
