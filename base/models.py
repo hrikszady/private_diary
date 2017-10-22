@@ -15,7 +15,7 @@ class User(models.Model):
     reference_no = models.CharField(default="None", max_length=15)
     username = models.CharField(
         null=True, max_length=10, blank=True)
-    password = models.CharField(max_length=32, null=True, blank=True)
+    password = models.CharField(max_length=520, null=True, blank=True)
     name = models.CharField(max_length=20, null=True, blank=True)
     phone_no = models.CharField(max_length=10)
     alternate_phone_no = models.CharField(
@@ -74,7 +74,7 @@ class User(models.Model):
             reference_no = get_random_string(
                 15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
         Reference_Number.objects.create(
-            user=self, reference_no=self.reference_no,
+            user=self, reference_no=reference_no,
             purpose='User Registration')
         return reference_no
 

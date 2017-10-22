@@ -11,7 +11,7 @@ STATIC_URL = '/static/'
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.0.106', '*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

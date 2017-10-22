@@ -2,7 +2,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from base.models import User, Guest
 from datetime import datetime
-from django.http import JsonResponse
 
 
 @csrf_exempt
@@ -52,22 +51,39 @@ def get_ip_address(self):
     return ip_address
 
 
-def convert_to_dict(self):
-    if self.method == 'POST':
-        data = dict(self.POST)
-        self.POST = {}
-        return self, data
-    else:
-        return JsonResponse({'Error': 'Bas Request'}, status=403)
+class FormData(object):
+    def get_terms_value(self, request):
+        terms = request.POST.get('terms', '')
+        if terms == 'on':
+            return True
+        else:
+            return False
+
+    def __init__(self, request):
+        if request.method == 'POST':
+            self.username = request.POST.get('username', '')
+            self.terms = self.get_terms_value(request)
+            self.name = request.POST.get('name', '')
+            self.country = request.POST.get('country', '')
+            self.password = request.POST.get('password', '')
+            self.phone = request.POST.get('phone', '')
+            self.email = request.POST.get('email', '')
 
 
 def save_registration_form(self):
     user, created = User.objects.get_or_create(
-        phone_no=self['phone'],
-        email=self['email'])
+        phone_no=self.phone, email=self.email,
+        username=self.username)
     if not created:
-        return created, 'User already exists with phone email combination'
-    import pdb; pdb.set_trace()
-
-
-    return None
+        return created, 'User already exists with phone email combination.'
+    try:
+        user.password = self.password
+        user.name = self.name
+        user.username = self.username
+        user.country = self.country
+        user.is_approved_terms_and_conditions = self.terms
+        user.save()
+        return created, 'User Registered! Please Verify yours email and phone.'
+    except Exception, e:
+        user.delete()
+        return False, e
