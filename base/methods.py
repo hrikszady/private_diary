@@ -22,7 +22,7 @@ def verify_user(self, request):
     else:
         messages.error(request, 'Invalid Password ! Please Try Again.')
         return False, self
-    messages.error(request, 'Verification Failed')
+    messages.error(request, 'Invalid! Verification Failed')
     return False, self
 
 
