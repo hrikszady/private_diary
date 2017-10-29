@@ -1,6 +1,6 @@
 .w3-card,.w3-card-2{box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)}
 .w3-container,.w3-panel{padding:0.01em 16px}.w3-panel{margin-top:16px;margin-bottom:16px}
-#content-main {float: left; width: 40%; margin: 10px 30%; height: 245px}
+#content-main {float: left; width: 43%; margin: 10px 30%;}
 .title{background: darkcyan;font-size: 18px;color: white;font-family: "Helvetica Neue",Roboto,Arial,"Droid Sans",sans-serif;padding-top: 4px;padding-bottom: 7px;margin: 0px;border-bottom: 2px solid #E6E9ED; margin-bottom: 25px}
 .admin-login {margin-left: 75%; font-size: 10px}
 .sign-up {font-size: 10px }
@@ -8,4 +8,11 @@
 .footer a {color: wheat}
 .footer a:link, .footer a:visited {color: wheat;}
 .footer a:focus ,.footer a:hover {color: white; font-size:10.4px;}
-.signup-login {padding-top: 125px; text-align: center;}
+.signup-login {text-align: center;}
+.signup-login p {margin-left: 5px; display: inline-flex; text-align: left;}
+.one-liner-username{width: 295px;}
+.one-liner-name{width: 295px;}
+.one-liner{width: 106px; display: inline-flex;}
+.one-liner-email{width: 325px;}
+.one-liner-country{width: 175px;}
+.one-liner-terms{width: 20px;margin-top: 5px;}
