@@ -18,6 +18,7 @@ def verify_user(self, request):
                 Exists! Please Try Again.')
             return False, self
     if user.check_password(str(password)):
+        request.session['user_token'] = user.generate_session_id()
         return True, user
     else:
         messages.error(request, 'Invalid Password ! Please Try Again.')

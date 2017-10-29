@@ -74,4 +74,4 @@ def login_api(request, data):
     is_user, user = verify_user(data, request)
     if not is_user:
         return redirect('/account/user/login')
-    return None
+    return render(request, 'user_board.html')
