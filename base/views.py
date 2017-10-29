@@ -54,20 +54,18 @@ def profile(request, methods="GET"):
 @post
 @csrf_exempt
 def signupsubmit(request, data):
-    form = LoginForm()
     registration_status, registration_message = save_registration_form(data)
     if registration_status:
-        form.fields.update({
-            'username': data.username,
-            'password': data.password
-        })
-        render(request, 'login.html', {'form': form})
+        user_data = {
+            'username': str(data.username),
+            'password': str(data.password)
+        }
+        form = LoginForm(user_data)
+        return render(request, 'login.html', {'form': form})
     messages.error(
         request,
-        'Sorry! Unable to register' % registration_message)
-    return render(request, 'signup.html', {
-        'form': form, 'signup': signup
-    })
+        'Sorry! Unable to register. Reason: %s' % registration_message)
+    return redirect('/account/user/signup')
 
 
 @post

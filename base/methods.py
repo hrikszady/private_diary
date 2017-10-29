@@ -75,13 +75,13 @@ def save_registration_form(self):
     user, created = User.objects.get_or_create(
         phone_no=self.phone)
     if not created:
-        return created, 'User already exists with %s.' % self.phone
+        return created, 'User already exists with %s.' % str(self.phone)
     if User.objects.filter(email=self.email).exists():
         user.delete()
-        return False, 'User already exists with %s.' % self.email
+        return False, 'User already exists with %s.' % str(self.email)
     if User.objects.filter(email=self.username).exists():
         user.delete()
-        return False, 'User already exists with %s.' % self.username
+        return False, 'User already exists with %s.' % str(self.username)
     try:
         user.password = self.password
         user.name = self.name

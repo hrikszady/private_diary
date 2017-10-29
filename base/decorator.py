@@ -18,7 +18,6 @@ def get_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
 
 def post_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
-        import pdb; pdb.set_trace()
         if request.method != 'POST':
             return bad_request(request)
         data = FormData(request)
