@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from base.decorator import (
     get_method as get, post_method as post, guest
@@ -54,25 +54,24 @@ def profile(request, methods="GET"):
 @post
 @csrf_exempt
 def signupsubmit(request, data):
-    form = LoginForm()
     registration_status, registration_message = save_registration_form(data)
     if registration_status:
-        form.fields.update({
-            'username': data.username,
-            'password': data.password
-        })
-        render(request, 'login.html', {'form': form})
+        user_data = {
+            'username': str(data.username),
+            'password': str(data.password)
+        }
+        form = LoginForm(user_data)
+        return render(request, 'login.html', {'form': form})
     messages.error(
         request,
-        'Sorry! Unable to register' % registration_message)
-    return render(request, 'signup.html', {
-        'form': form, 'signup': signup
-    })
+        'Sorry! Unable to register. Reason: %s' % registration_message)
+    return redirect('/account/user/signup')
 
 
 @post
 @csrf_exempt
 def login_api(request, data):
     is_user, user = verify_user(data, request)
-    print is_user, user
+    if not is_user:
+        return redirect('/account/user/login')
     return None

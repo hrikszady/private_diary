@@ -14,7 +14,7 @@ def verify_user(self, request):
             user = User.objects.get(phone_no=self.phone)
         except User.DoesNotExist:
             messages.error(
-                request, 'Invalid User ID. Agent doesnot\
+                request, 'Invalid User ID. username doesnot\
                 Exists! Please Try Again.')
             return False, self
     if user.check_password(str(password)):
@@ -75,13 +75,13 @@ def save_registration_form(self):
     user, created = User.objects.get_or_create(
         phone_no=self.phone)
     if not created:
-        return created, 'User already exists with %s.' % self.phone
+        return created, 'User already exists with %s.' % str(self.phone)
     if User.objects.filter(email=self.email).exists():
         user.delete()
-        return False, 'User already exists with %s.' % self.email
+        return False, 'User already exists with %s.' % str(self.email)
     if User.objects.filter(email=self.username).exists():
         user.delete()
-        return False, 'User already exists with %s.' % self.username
+        return False, 'User already exists with %s.' % str(self.username)
     try:
         user.password = self.password
         user.name = self.name
