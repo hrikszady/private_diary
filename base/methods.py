@@ -14,7 +14,7 @@ def verify_user(self, request):
             user = User.objects.get(phone_no=self.phone)
         except User.DoesNotExist:
             messages.error(
-                request, 'Invalid User ID. Agent doesnot\
+                request, 'Invalid User ID. username doesnot\
                 Exists! Please Try Again.')
             return False, self
     if user.check_password(str(password)):

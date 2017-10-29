@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from base.decorator import (
     get_method as get, post_method as post, guest
@@ -74,5 +74,6 @@ def signupsubmit(request, data):
 @csrf_exempt
 def login_api(request, data):
     is_user, user = verify_user(data, request)
-    print is_user, user
+    if not is_user:
+        return redirect('/account/user/login')
     return None
