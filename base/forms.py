@@ -16,31 +16,34 @@ class LoginForm(forms.Form):
 
 class SignUPForm(forms.Form):
     username = forms.CharField(
-        label="Username", max_length=30, widget=forms.TextInput(
-            attrs={'class': 'form-control', 'name': 'username'}))
+        label="Username", max_length=30, widget=forms.TextInput(attrs={
+            'class': 'form-control one-liner-username', 'name': 'username'}))
     name = forms.CharField(
         label="Full Name", max_length=30, widget=forms.TextInput(
-            attrs={'class': 'form-control', 'name': 'name'}))
+            attrs={'class': 'form-control one-liner-name', 'name': 'name'}))
     phone = forms.CharField(
         label="Phone no", max_length=10, min_length=10,
         widget=forms.NumberInput(attrs={
-            'class': 'form-control', 'name': 'phone'}))
+            'class': 'form-control one-liner', 'name': 'phone'}))
     password = forms.CharField(
         label="Password", max_length=30, widget=forms.PasswordInput(
-            attrs={'class': 'form-control', 'name': 'password'}))
+            attrs={'class': 'form-control one-liner', 'name': 'password'}))
     email = forms.EmailField(
-        label="Email", max_length=30, widget=forms. EmailInput(
-            attrs={'class': 'form-control', 'name': 'email'}))
+        label="Email", max_length=30, widget=forms.EmailInput(
+            attrs={'class': 'form-control one-liner-email', 'name': 'email'}))
     COUNTRY_CHOICES = (
         ("choose country", "Select"), ("india", "INDIA"),
         ("pakistan", "PAKISTAN"), ("bangaldesh", "BANGLADESH"),
         ("srilanka", "SRILANKA"), ("unitedstates", "US"), ("nepal", "NEPAL"),
         ("australia", "AUSTRALIA"))
     country = forms.ChoiceField(
-        choices=COUNTRY_CHOICES, label='Country', required=True)
+        choices=COUNTRY_CHOICES, label='Country', required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-control one-liner-country', 'name': 'country'}
+        ))
     terms = forms.BooleanField(
         label="Terms & Conditions", widget=forms.CheckboxInput(
-            attrs={'class': 'forms-control', 'name': 'terms'}))
+            attrs={'class': 'forms-control one-liner-terms', 'name': 'terms'}))
 
 
 class ProfileForm(forms.Form):
