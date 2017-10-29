@@ -45,7 +45,7 @@ class User(models.Model):
                 self.password = self.get_hashed_password(str(self.password))
         except User.DoesNotExist:
             if self.reference_no == "None":
-                self.reference_no = self.get_reference_no()
+                self.reference_no = self.get_or_create_reference_no()
             self.password = self.get_hashed_password(str(self.password))
         super(User, self).save(*args, **kwargs)
 
@@ -65,18 +65,26 @@ class User(models.Model):
         return bcrypt.hashpw(
             password, str(self.password)) == str(self.password)
 
-    def get_reference_no(self):
-        reference_no = get_random_string(
-            15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
-        while (
-            Reference_Number.objects.filter(
-                reference_no=reference_no)).exists():
+    def get_or_create_reference_no(self):
+        try:
+            reference = Reference_Number.objects.get(
+                user__username=self.username)
+            return reference.reference_no
+        except Reference_Number.DoesNotExist:
             reference_no = get_random_string(
                 15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
-        Reference_Number.objects.create(
-            user=self, reference_no=reference_no,
-            purpose='User Registration')
-        return reference_no
+            while (
+                Reference_Number.objects.filter(
+                    reference_no=reference_no)).exists():
+                reference_no = get_random_string(
+                    15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
+            Reference_Number.objects.create(
+                user=self, reference_no=reference_no,
+                purpose='User Registration')
+            return reference_no
+
+    def generate_session_id(self):
+        return self.reference_no
 
 
 class Academic(models.Model):
@@ -194,12 +202,12 @@ class Guest(models.Model):
     def save(self, *args, **kwargs):
         try:
             Guest.objects.get(id=self.id)
-            self.reference_no = self.get_reference_no()
+            self.reference_no = self.get_or_create_reference_no()
         except Guest.DoesNotExist:
-            self.reference_no = self.get_reference_no()
+            self.reference_no = self.get_or_create_reference_no()
         super(Guest, self).save(*args, **kwargs)
 
-    def get_reference_no(self):
+    def get_or_create_reference_no(self):
         reference_no = get_random_string(
             15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
         while (
