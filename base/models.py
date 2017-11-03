@@ -84,7 +84,9 @@ class User(models.Model):
             return reference_no
 
     def generate_session_id(self):
-        return self.reference_no
+        import bcrypt
+        salt = bcrypt.gensalt()
+        return bcrypt.hashpw(self.reference_no, salt)
 
 
 class Academic(models.Model):
