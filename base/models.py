@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.utils.crypto import get_random_string
 from django.db import models
+from datetime import datetime, timedelta
 import uuid
 
 
@@ -32,7 +33,7 @@ class User(models.Model):
     alternate_email = models.CharField(max_length=64, null=True, blank=True)
     pincode = models.IntegerField(blank=True, null=True)
     address = models.TextField(null=True, blank=True)
-    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
     is_phone_no_verified = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
     hobbies = models.TextField(null=True, blank=True)
@@ -40,9 +41,8 @@ class User(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            current = User.objects.get(id=self.id)
-            if not current.check_password(str(self.password)):
-                self.password = self.get_hashed_password(str(self.password))
+            current = User.objects.get(id=self.id)  # noqa
+            self.password = self.get_hashed_password(str(self.password))
         except User.DoesNotExist:
             if self.reference_no == "None":
                 self.reference_no = self.get_or_create_reference_no()
@@ -87,6 +87,23 @@ class User(models.Model):
         import bcrypt
         salt = bcrypt.gensalt()
         return bcrypt.hashpw(self.reference_no, salt)
+
+    def clear_session(self, request):
+        request.session.pop('guest_id', '')
+        request.session.pop('user_token', '')
+        return True
+
+    def is_email_verified(self):
+        grace_time = (datetime.now().date() - self.created.date()).days
+        if grace_time > 7 and not self.is_email_verified:
+            return False
+        return True
+
+    def is_phone_verified(self):
+        grace_time = (datetime.now().date() - self.created.date()).days
+        if grace_time > 45 and not self.is_phone_no_verified:
+            return False
+        return True
 
 
 class Academic(models.Model):

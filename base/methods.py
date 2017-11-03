@@ -61,7 +61,16 @@ def verify_user(self, request):
                 request, 'Invalid User ID. username doesnot\
                 Exists! Please Try Again.')
             return False, self
+    if not user.is_email_verified():
+        messages.error(
+            request, 'Please. Verify your email !')
+        return False, self
+    if not user.is_phone_verified():
+        messages.error(
+            request, 'Please. Verify your Phone no !')
+        return False, self
     if user.check_password(str(password)):
+        user.clear_session(request)
         request.session['user_token'] = user.generate_session_id()
         return True, user
     else:
