@@ -4,55 +4,6 @@ from base.models import User, Guest
 from datetime import datetime
 
 
-@csrf_exempt
-def verify_user(self, request):
-    password = self.password
-    try:
-        user = User.objects.get(username=self.username)
-    except User.DoesNotExist:
-        try:
-            user = User.objects.get(phone_no=self.phone)
-        except User.DoesNotExist:
-            messages.error(
-                request, 'Invalid User ID. username doesnot\
-                Exists! Please Try Again.')
-            return False, self
-    if user.check_password(str(password)):
-        request.session['user_token'] = user.generate_session_id()
-        return True, user
-    else:
-        messages.error(request, 'Invalid Password ! Please Try Again.')
-        return False, self
-    messages.error(request, 'Invalid! Verification Failed')
-    return False, self
-
-
-def logout(self):
-    try:
-        self.session.flush()
-    except KeyError:
-        pass
-    return True, self
-
-
-def create_guest(ip_address):
-    now = datetime.now()
-    guest, created = Guest.objects.get_or_create(created=now)
-    if created:
-        guest.ip_address = ip_address
-        guest.save()
-    return guest.reference_no
-
-
-def get_ip_address(self):
-    http_ip = self.request.META.get('HTTP_X_FORWARDED_FOR')
-    if http_ip:
-        ip_address = http_ip.split(',')[0]
-    else:
-        ip_address = self.request.META.get('REMOTE_ADDR')
-    return ip_address
-
-
 class FormData(object):
     def get_terms_value(self, request):
         terms = request.POST.get('terms', '')
@@ -95,3 +46,60 @@ def save_registration_form(self):
     except Exception, e:
         user.delete()
         return False, e
+
+
+@csrf_exempt
+def verify_user(self, request):
+    password = self.password
+    try:
+        user = User.objects.get(username=self.username)
+    except User.DoesNotExist:
+        try:
+            user = User.objects.get(phone_no=self.phone)
+        except User.DoesNotExist:
+            messages.error(
+                request, 'Invalid User ID. username doesnot\
+                Exists! Please Try Again.')
+            return False, self
+    if user.check_password(str(password)):
+        request.session['user_token'] = user.generate_session_id()
+        return True, user
+    else:
+        messages.error(request, 'Invalid Password ! Please Try Again.')
+        return False, self
+    messages.error(request, 'Invalid! Verification Failed')
+    return False, self
+
+
+def logout(self):
+    try:
+        self.session.flush()
+    except KeyError:
+        pass
+    return True, self
+
+
+def verify_user_session(self):
+    user_token = self.request.session.get('user_token', None)
+    if user_token is None:
+        return False
+    else:
+        return True
+
+
+def create_guest(ip_address):
+    now = datetime.now()
+    guest, created = Guest.objects.get_or_create(created=now)
+    if created:
+        guest.ip_address = ip_address
+        guest.save()
+    return guest.reference_no
+
+
+def get_ip_address(self):
+    http_ip = self.request.META.get('HTTP_X_FORWARDED_FOR')
+    if http_ip:
+        ip_address = http_ip.split(',')[0]
+    else:
+        ip_address = self.request.META.get('REMOTE_ADDR')
+    return ip_address
