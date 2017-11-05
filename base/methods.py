@@ -1,6 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-from base.models import User, Guest
+from base.models import User, Guest, Reference_Number
 from datetime import datetime
 
 
@@ -58,7 +58,7 @@ def verify_user(self, request):
             user = User.objects.get(phone_no=self.phone)
         except User.DoesNotExist:
             messages.error(
-                request, 'Invalid User ID. username doesnot\
+                request, 'Invalid User ID. No user\
                 Exists! Please Try Again.')
             return False, self
     if not user.is_email_verified():
@@ -89,11 +89,16 @@ def logout(self):
 
 
 def verify_user_session(self):
-    user_token = self.request.session.get('user_token', None)
-    if user_token is None:
-        return False
-    else:
-        return True
+    user_token = str(self.request.session.get('user_token', None))
+    if user_token is  not None:
+        reference_nos = Reference_Number.objects.all().values('reference_no')
+        import bcrypt
+        for reference_no in reference_nos:
+            if bcrypt.hashpw(
+                str(reference_no['reference_no']), user_token) == user_token:
+                user = User.objects.get(reference_no=reference_no['reference_no'])
+                return True, user
+    return False, None
 
 
 def create_guest(ip_address):
