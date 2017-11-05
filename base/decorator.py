@@ -5,7 +5,7 @@ from base.methods import (
     create_guest, get_ip_address, FormData,
     verify_user_session
 )
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 def get_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
@@ -41,10 +41,10 @@ def guest(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         ip_address = get_ip_address(request)
         guest_id = request.request.session.get('guest_id', None)
-        if guest_id is None and not verify_user_session(request):
+        user_session, user = verify_user_session(request)
+        if guest_id is None and user_session:
             request.request.session['guest_id'] = create_guest(ip_address)
-        if verify_user_session(request):
-            return render(request, 'user_board.html', {'user': user})
+            return redirect('/account/user/signin')
         return f(request, *args, **kwargs)
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__

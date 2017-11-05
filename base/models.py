@@ -66,27 +66,22 @@ class User(models.Model):
             password, str(self.password)) == str(self.password)
 
     def get_or_create_reference_no(self):
-        try:
-            reference = Reference_Number.objects.get(
-                user__username=self.username)
-            return reference.reference_no
-        except Reference_Number.DoesNotExist:
+        reference_no = get_random_string(
+            15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
+        while (
+            Reference_Number.objects.filter(
+                reference_no=reference_no)).exists():
             reference_no = get_random_string(
                 15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
-            while (
-                Reference_Number.objects.filter(
-                    reference_no=reference_no)).exists():
-                reference_no = get_random_string(
-                    15, allowed_chars='ABCDEFGHITUVWXYZ0123456789')
-            Reference_Number.objects.create(
-                user=self, reference_no=reference_no,
-                purpose='User Registration')
-            return reference_no
+        Reference_Number.objects.create(
+            user=self, reference_no=reference_no,
+            purpose='User Registration')
+        return reference_no
 
     def generate_session_id(self):
         import bcrypt
         salt = bcrypt.gensalt()
-        return bcrypt.hashpw(self.reference_no, salt)
+        return bcrypt.hashpw(str(self.reference_no), salt)
 
     def clear_session(self, request):
         request.session.pop('guest_id', '')
