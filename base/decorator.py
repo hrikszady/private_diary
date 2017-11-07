@@ -49,3 +49,13 @@ def guest(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
     return wrap
+
+def auth_user(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
+    def wrap(request, *args, **kwargs):
+        if request.method != 'GET':
+            return bad_request(request)
+        return f(request, *args, **kwargs)
+    wrap.__doc__ = f.__doc__
+    wrap.__name__ = f.__name__
+    return wrap
+
