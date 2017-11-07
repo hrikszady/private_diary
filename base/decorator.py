@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 from django.http import JsonResponse
 from base.methods import (
     create_guest, get_ip_address, FormData,
-    verify_user_session
+    verify_user_session, get_logged_session
 )
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
+
 
 def get_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
@@ -41,21 +42,24 @@ def guest(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         ip_address = get_ip_address(request)
         guest_id = request.request.session.get('guest_id', None)
-        user_session, user = verify_user_session(request)
+        user_session = verify_user_session(request)
         if guest_id is None and user_session:
             request.request.session['guest_id'] = create_guest(ip_address)
-            return redirect('/account/user/signin')
+            return redirect('/home')
         return f(request, *args, **kwargs)
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
     return wrap
 
-def auth_user(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
+
+def is_authenticated(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         if request.method != 'GET':
             return bad_request(request)
-        return f(request, *args, **kwargs)
+        user_session, user = get_logged_session(request)
+        if not user_session:
+            return redirect('/')
+        return f(request, user, *args, **kwargs)
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
     return wrap
-

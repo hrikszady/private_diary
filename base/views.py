@@ -4,7 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from base.decorator import (
-    get_method as get, post_method as post, guest
+    get_method as get, post_method as post, guest,
+    is_authenticated
 )
 from base.forms import (LoginForm, SignUPForm, ProfileForm)
 from base.models import User
@@ -74,4 +75,9 @@ def login_api(request, data):
     is_user, user = verify_user(data, request)
     if not is_user:
         return redirect('/account/user/login')
+    return redirect('/home')
+
+
+@is_authenticated
+def diary_home(request, user):
     return render(request, 'user_board.html', {'user': user})
