@@ -43,9 +43,10 @@ def guest(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
         ip_address = get_ip_address(request)
         guest_id = request.request.session.get('guest_id', None)
         user_session = verify_user_session(request)
-        if guest_id is None and user_session:
-            request.request.session['guest_id'] = create_guest(ip_address)
+        if user_session:
             return redirect('/home')
+        elif guest_id is None:
+            request.request.session['guest_id'] = create_guest(ip_address)
         return f(request, *args, **kwargs)
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
