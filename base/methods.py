@@ -89,16 +89,14 @@ def logout(self):
 
 
 def verify_user_session(self):
-    user_token = str(self.request.session.get('user_token', None))
-    if user_token is  not None:
+    user_token = self.request.session.get('user_token', None)
+    if user_token is not None:
         reference_nos = Reference_Number.objects.all().values('reference_no')
         import bcrypt
         for reference_no in reference_nos:
-            if bcrypt.hashpw(
-                str(reference_no['reference_no']), user_token) == user_token:
-                user = User.objects.get(reference_no=reference_no['reference_no'])
-                return True, user
-    return False, None
+            if bcrypt.hashpw(str(reference_no['reference_no']), user_token) == user_token:  # noqa
+                return True
+    return False
 
 
 def create_guest(ip_address):
@@ -117,3 +115,16 @@ def get_ip_address(self):
     else:
         ip_address = self.request.META.get('REMOTE_ADDR')
     return ip_address
+
+
+def get_logged_session(self):
+    user_token = self.session.get('user_token', None)
+    if user_token is not None:
+        reference_nos = Reference_Number.objects.all().values('reference_no')
+        import bcrypt
+        for reference_no in reference_nos:
+            if bcrypt.hashpw(str(reference_no['reference_no']), user_token) == user_token:  # noqa
+                user = User.objects.get(
+                    reference_no=reference_no['reference_no'])
+                return True, user
+    return False, None
