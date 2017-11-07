@@ -43,7 +43,7 @@ def save_registration_form(self):
         user.save()
         message = 'User created! Please Verify yours email and phone.'
         return created, message
-    except Exception, e:
+    except Exception as e:
         user.delete()
         return False, e
 
@@ -82,9 +82,10 @@ def verify_user(self, request):
 
 def logout(self):
     try:
-        self.session.flush()
+        self.session.pop('user_token')
     except KeyError:
-        pass
+        self.session.flush()
+        return True, self
     return True, self
 
 
@@ -96,7 +97,6 @@ def verify_user_session(self):
         for reference_no in reference_nos:
             if bcrypt.hashpw(str(reference_no['reference_no']), str(user_token)) == user_token:  # noqa
                 return True
-    print user_token
     return False
 
 
