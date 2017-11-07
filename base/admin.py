@@ -87,7 +87,6 @@ class MemoAdmin(admin.ModelAdmin):
 class GuestAdmin(admin.ModelAdmin):
     list_display = (
         'reference_no', 'ip_address', 'created',
-#        'active_session'
     )
     search_fields = ('reference_no', 'ip_address')
     ordering = ('-created',)
@@ -95,7 +94,6 @@ class GuestAdmin(admin.ModelAdmin):
     actions = ['end_session']
 
     def end_session(self, request, queryset):
-        #self.session.flush()
         request.session.pop('guest_id')
 
 #    def active_session(self, guest_object):

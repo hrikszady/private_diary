@@ -9,7 +9,7 @@ from base.decorator import (
 )
 from base.forms import (LoginForm, SignUPForm, ProfileForm)
 from base.models import User
-from base.methods import save_registration_form, verify_user
+from base.methods import save_registration_form, verify_user, logout
 from django.contrib import messages
 
 
@@ -81,3 +81,9 @@ def login_api(request, data):
 @is_authenticated
 def diary_home(request, user):
     return render(request, 'user_board.html', {'user': user})
+
+
+@is_authenticated
+def logout_user(request, user):
+    logout(request)
+    return redirect('/')
