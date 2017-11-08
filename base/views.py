@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from base.decorator import (
     get_method as get, post_method as post, guest,
-    is_authenticated
+    is_authenticated, is_unauthenticated
 )
 from base.forms import (LoginForm, SignUPForm, ProfileForm)
 from base.models import User
@@ -20,12 +20,14 @@ class HomePageView(TemplateView):
 
 
 @get
+@is_unauthenticated
 def login(request, methods="GET"):
     form = LoginForm()
     return render(request, 'login.html', {'form': form})
 
 
 @get
+@is_unauthenticated
 def signup(request, methods="GET"):
     form = SignUPForm()
     signup = True
@@ -35,6 +37,7 @@ def signup(request, methods="GET"):
 
 
 @get
+@is_authenticated
 @csrf_exempt
 def profile(request, methods="GET"):
     user_id = request.GET.get('id', '')
@@ -53,6 +56,7 @@ def profile(request, methods="GET"):
 
 
 @post
+@is_unauthenticated
 @csrf_exempt
 def signupsubmit(request, data):
     registration_status, registration_message = save_registration_form(data)
