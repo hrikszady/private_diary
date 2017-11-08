@@ -64,3 +64,16 @@ def is_authenticated(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
     return wrap
+
+
+def is_unauthenticated(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
+    def wrap(request, *args, **kwargs):
+        if request.method != 'GET':
+            return bad_request(request)
+        user_session = True if 'user_token' in request.session.keys() else False
+        if user_session:
+            return redirect('/home')
+        return f(request, *args, **kwargs)
+    wrap.__doc__ = f.__doc__
+    wrap.__name__ = f.__name__
+    return wrap
