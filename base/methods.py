@@ -95,7 +95,9 @@ def verify_user_session(self):
         reference_nos = Reference_Number.objects.all().values('reference_no')
         import bcrypt
         for reference_no in reference_nos:
-            if bcrypt.hashpw(str(reference_no['reference_no']), str(user_token)) == user_token:  # noqa
+            if bcrypt.hashpw(
+                str(reference_no['reference_no']), str(user_token)
+            ) == user_token:
                 return True
     return False
 
@@ -124,7 +126,9 @@ def get_logged_session(self):
         reference_nos = Reference_Number.objects.all().values('reference_no')
         import bcrypt
         for reference_no in reference_nos:
-            if bcrypt.hashpw(str(reference_no['reference_no']), str(user_token)) == user_token:  # noqa
+            if bcrypt.hashpw(
+                str(reference_no['reference_no']), str(user_token)
+            ) == user_token:
                 user = User.objects.get(
                     reference_no=reference_no['reference_no'])
                 return True, user

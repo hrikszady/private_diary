@@ -162,6 +162,7 @@ class Expense(models.Model):
         default="select", choices=CATEGORY_CHOICES, max_length=12)
     description = models.TextField()
     comment = models.CharField(blank=True, null=True, max_length=64)
+    created = models.DateTimeField(auto_now_add=True)
 
 
 class Memo(models.Model):

@@ -7,7 +7,9 @@ from base.decorator import (
     get_method as get, post_method as post, guest,
     is_authenticated, is_unauthenticated
 )
-from base.forms import (LoginForm, SignUPForm, ProfileForm)
+from base.forms import (
+    LoginForm, SignUPForm, ProfileForm, ExpenseForm
+)
 from base.models import User
 from base.methods import save_registration_form, verify_user, logout
 from django.contrib import messages
@@ -84,10 +86,21 @@ def login_api(request, data):
 
 @is_authenticated
 def diary_home(request, user):
-    return render(request, 'user_board.html', {'user': user})
+    expenses_form = ExpenseForm()
+    return render(request, 'user_board.html', {
+        'user': user,
+        'expenses_form': expenses_form
+    })
 
 
 @is_authenticated
 def logout_user(request, user):
     logout(request)
+    return redirect('/')
+
+
+@post
+@csrf_exempt
+def add_expenses(request, data):
+    import pdb; pdb.set_trace()
     return redirect('/')

@@ -61,3 +61,12 @@ class Academic(forms.Form):
     percentage = forms.FloatField()
     institute = forms.CharField(max_length=256)
     location = forms.CharField(max_length=64)
+
+
+class ExpenseForm(forms.Form):
+    """Form for Expense manager for ExpenseForm"""
+    amount = forms.CharField(required=True)
+    date = forms.DateField(required=True)
+    category = forms.CharField(required=True)
+    description = forms.CharField(required=False)
+    comment = forms.CharField(required=False)

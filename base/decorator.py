@@ -8,7 +8,8 @@ from base.methods import (
 from django.shortcuts import redirect
 
 
-def get_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
+def get_method(
+        f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         if request.method != 'GET':
             return bad_request(request)
@@ -18,7 +19,8 @@ def get_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     return wrap
 
 
-def post_method(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
+def post_method(
+        f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         if request.method != 'POST':
             return bad_request(request)
@@ -38,7 +40,8 @@ def bad_request(request):
     return JsonResponse(response, status=403)
 
 
-def guest(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
+def guest(
+        f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         ip_address = get_ip_address(request)
         guest_id = request.request.session.get('guest_id', None)
@@ -53,7 +56,8 @@ def guest(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     return wrap
 
 
-def is_authenticated(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
+def is_authenticated(
+        f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         if request.method != 'GET':
             return bad_request(request)
@@ -66,11 +70,13 @@ def is_authenticated(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     return wrap
 
 
-def is_unauthenticated(f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
+def is_unauthenticated(
+        f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
         if request.method != 'GET':
             return bad_request(request)
-        user_session = True if 'user_token' in request.session.keys() else False
+        user_session = True \
+            if 'user_token' in request.session.keys() else False
         if user_session:
             return redirect('/home')
         return f(request, *args, **kwargs)
