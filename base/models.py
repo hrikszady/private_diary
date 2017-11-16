@@ -13,6 +13,7 @@ class User(models.Model):
     and providing offers and premium facility.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_pic = models.FileField(null=True)
     reference_no = models.CharField(default="None", max_length=15)
     username = models.CharField(
         null=True, max_length=10, blank=True)
