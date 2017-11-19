@@ -60,11 +60,11 @@ def verify_user(self, request):
                 request, 'Invalid User ID. No user\
                 Exists! Please Try Again.')
             return False, self
-    if not user.is_email_verified():
+    if not user.is_email_verified()[0]:
         messages.error(
             request, 'Please. Verify your email !')
         return False, self
-    if not user.is_phone_verified():
+    if not user.is_phone_verified()[0]:
         messages.error(
             request, 'Please. Verify your Phone no !')
         return False, self
