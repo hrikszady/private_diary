@@ -1,6 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-from base.models import User, Guest, Reference_Number
+from base.models import User, Guest, Reference_Number, Credentials
 from datetime import datetime
 
 
@@ -34,12 +34,18 @@ def save_registration_form(self):
         user.delete()
         return False, 'User already exists with %s.' % str(self.username)
     try:
-        user.password = self.password
         user.name = self.name
         user.username = self.username
         user.country = self.country
         user.is_approved_terms_and_conditions = self.terms
+        user.email = self.email
         user.save()
+        cred, created = Credentials.objects.get_or_create(user=user)
+        if not created:
+            user.delete()
+            return False, 'User Already logged!'
+        cred.password = self.password
+        cred.save()
         message = 'User created! Please Verify yours email and phone.'
         return created, message
     except Exception as e:
