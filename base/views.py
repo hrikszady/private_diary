@@ -76,6 +76,7 @@ def signupsubmit(request, data):
 
 
 @post
+@is_unauthenticated
 @csrf_exempt
 def login_api(request, data):
     is_user, user = verify_user(data, request)
