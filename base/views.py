@@ -88,9 +88,13 @@ def login_api(request, data):
 
 @is_authenticated
 def diary_home(request, user):
+    notifications = list()
     expenses_form = ExpenseForm()
-    phone_notif, email_notif = user.get_verification_notification()
-    notifications = [phone_notif, email_notif]
+    verify_notif = user.get_verification_notification()
+    for notify in verify_notif:
+        if len(notify) == 0:
+            continue
+        notifications.append(notify)
     return render(request, 'user_board.html', {
         'user': user,
         'expenses_form': expenses_form,

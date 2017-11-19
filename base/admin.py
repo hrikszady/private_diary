@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from base.models import (
     User, Academic, ParentalInfo, Document, Expense, Memo,
-    Reference_Number, Guest
+    Reference_Number, Guest, Credentials
 )
 
 
@@ -17,6 +17,19 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('name', 'email', 'phone_no')
     # TODOS: Put some actions syntax: ['download']
     # Then define a sub function for the that field.
+
+
+class CredentialsAdmin(admin.ModelAdmin):
+    """Display all the fields related to
+    User class on Admin Panel, Can be seen
+    only by Developers. Higlhy sensitive data
+    """
+    list_display = ('user', 'created',)
+    search_fields = (
+        'user__name', 'user__phone_no', 'user__email')
+    ordering = ('-created',)
+    list_filter = ('created',)
+    raw_id_fields = ('user',)
 
 
 class AcademicAdmin(admin.ModelAdmin):
@@ -131,4 +144,5 @@ admin.site.register(Expense, ExpenseAdmin)
 admin.site.register(Memo, MemoAdmin)
 admin.site.register(Guest, GuestAdmin)
 admin.site.register(Reference_Number, Reference_NumberAdmin)
+admin.site.register(Credentials, CredentialsAdmin)
 admin.site.index_title = 'Diary'

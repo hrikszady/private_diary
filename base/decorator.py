@@ -60,8 +60,6 @@ def guest(
 def is_authenticated(
         f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
-        if request.method != 'GET':
-            return bad_request(request)
         user_session, user = get_logged_session(request)
         if not user_session:
             return redirect('/')

@@ -17,7 +17,6 @@ class User(models.Model):
     reference_no = models.CharField(default="None", max_length=15)
     username = models.CharField(
         null=True, max_length=10, blank=True)
-    password = models.CharField(max_length=520, null=True, blank=True)
     name = models.CharField(max_length=20, null=True, blank=True)
     phone_no = models.CharField(max_length=10)
     alternate_phone_no = models.CharField(
@@ -43,28 +42,19 @@ class User(models.Model):
     def save(self, *args, **kwargs):
         try:
             current = User.objects.get(id=self.id)  # noqa
-            self.password = self.get_hashed_password(str(self.password))
         except User.DoesNotExist:
             if self.reference_no == "None":
                 self.reference_no = self.get_or_create_reference_no()
-            self.password = self.get_hashed_password(str(self.password))
         super(User, self).save(*args, **kwargs)
-
-    def get_hashed_password(self, password):
-        """Hash a password for the first time
-        Using bcrypt, the salt is saved into the hash itself
-        """
-        import bcrypt
-        salt = bcrypt.gensalt()
-        return bcrypt.hashpw(password, salt)
 
     def check_password(self, password):
         """Check hased password. Using bcrypt,
         the salt is saved into the hash itself
         """
         import bcrypt
+        credential = Credentials.objects.get(user=self)
         return bcrypt.hashpw(
-            password, str(self.password)) == str(self.password)
+            password, str(credential.password)) == str(credential.password)
 
     def get_or_create_reference_no(self):
         reference_no = get_random_string(
@@ -91,35 +81,60 @@ class User(models.Model):
 
     def is_email_verified(self):
         grace_time = (datetime.now().date() - self.created.date()).days
-        if grace_time > 7 or not self.is_email_verified:
+        if grace_time > 7 and not self.is_email_verified:
             # Replace 'or' with 'and'
-            return False, grace_time
-        return True, grace_time
+            return False, 7 - grace_time
+        return True, 7 - grace_time
 
     def is_phone_verified(self):
         grace_time = (datetime.now().date() - self.created.date()).days
-        if grace_time > 45 or not self.is_phone_no_verified:
+        if grace_time > 45 and not self.is_phone_no_verified:
             # Replace 'or' with 'and'
-            return False, grace_time
-        return True, grace_time
+            return False, 45 - grace_time
+        return True, 45 - grace_time
 
     def get_verification_notification(self):
         now = str(datetime.now().time()).split('.')[0]
         email_notification = []
         phone_notification = []
-        is_phone_verified, phone_grace = self.is_phone_verified()
-        is_email_verified, email_grace = self.is_email_verified()
-        if not is_phone_verified:
+        phone_grace = self.is_phone_verified()[1]
+        email_grace = self.is_email_verified()[1]
+        if not self.is_phone_no_verified:
             # TODOs: Check also from user instance(is_phone_no_verified)
             # For development its ok
             phone_notification.extend(['Verify Phone', True,
                 'Hi, Your email is unverifed, Please verify your phone in :%s day(s) ' % phone_grace, now])  # noqa
-        if not is_email_verified:
+        if not self.is_email_verified:
             # TODOs: Check also from user instance(is_email_verified)
             # For development its ok
             email_notification.extend(['Verify Email', True,
                 'Hi, Your email is unverifed, Please verify your email in :%s day(s)' % email_grace, now])  # noqa
         return phone_notification, email_notification
+
+
+class Credentials(models.Model):
+    """Tampering with this model result in unable to login
+    Consult core-developer to know more about this login panel
+    """
+    user = models.ForeignKey('User')
+    password = models.CharField(max_length=520)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        try:
+            current = Credentials.objects.get(user=self.user)  # noqa
+            self.password = self.get_hashed_password(str(self.password))
+        except Credentials.DoesNotExist:
+            self.password = self.get_hashed_password(str(self.password))
+        super(Credentials, self).save(*args, **kwargs)
+
+    def get_hashed_password(self, password):
+        """Hash a password for the first time
+        Using bcrypt, the salt is saved into the hash itself
+        """
+        import bcrypt
+        salt = bcrypt.gensalt()
+        return bcrypt.hashpw(password, salt)
 
 
 class Academic(models.Model):
