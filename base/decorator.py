@@ -24,6 +24,7 @@ def post_method(
     def wrap(request, *args, **kwargs):
         if request.method != 'POST':
             return bad_request(request)
+        print 'here'
         data = FormData(request)
         request.POST = {}
         return f(request, data, *args, **kwargs)
@@ -73,8 +74,6 @@ def is_authenticated(
 def is_unauthenticated(
         f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
-        if request.method != 'GET':
-            return bad_request(request)
         user_session = True \
             if 'user_token' in request.session.keys() else False
         if user_session:

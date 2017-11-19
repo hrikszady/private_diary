@@ -13,14 +13,13 @@ class FormData(object):
             return False
 
     def __init__(self, request):
-        if request.method == 'POST':
-            self.username = request.POST.get('username', '')
-            self.terms = self.get_terms_value(request)
-            self.name = request.POST.get('name', '')
-            self.country = request.POST.get('country', '')
-            self.password = request.POST.get('password', '')
-            self.phone = request.POST.get('phone', '')
-            self.email = request.POST.get('email', '')
+        self.username = request.POST.get('username', '')
+        self.terms = self.get_terms_value(request)
+        self.name = request.POST.get('name', '')
+        self.country = request.POST.get('country', '')
+        self.password = request.POST.get('password', '')
+        self.phone = request.POST.get('phone', '')
+        self.email = request.POST.get('email', '')
 
 
 def save_registration_form(self):
@@ -55,7 +54,7 @@ def verify_user(self, request):
         user = User.objects.get(username=self.username)
     except User.DoesNotExist:
         try:
-            user = User.objects.get(phone_no=self.phone)
+            user = User.objects.get(phone_no=self.username)
         except User.DoesNotExist:
             messages.error(
                 request, 'Invalid User ID. No user\

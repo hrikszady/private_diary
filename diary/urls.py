@@ -22,7 +22,7 @@ import settings
 
 urlpatterns = [
     url(r'^account/admin/', admin.site.urls),
-    url(r'^account/user/logout/', auth_views.logout, {'next_page': '/login'}),
-    url(r'^', include('base.urls')),
+    url(r'^account/user/logout/', auth_views.logout, {'next_page': '/login'})
 ] + static(
-    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
+    url(r'^', include('base.urls'))]
