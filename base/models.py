@@ -91,15 +91,35 @@ class User(models.Model):
 
     def is_email_verified(self):
         grace_time = (datetime.now().date() - self.created.date()).days
-        if grace_time > 7 and not self.is_email_verified:
-            return False
-        return True
+        if grace_time > 7 or not self.is_email_verified:
+            # Replace 'or' with 'and'
+            return False, grace_time
+        return True, grace_time
 
     def is_phone_verified(self):
         grace_time = (datetime.now().date() - self.created.date()).days
-        if grace_time > 45 and not self.is_phone_no_verified:
-            return False
-        return True
+        if grace_time > 45 or not self.is_phone_no_verified:
+            # Replace 'or' with 'and'
+            return False, grace_time
+        return True, grace_time
+
+    def get_verification_notification(self):
+        now = str(datetime.now().time()).split('.')[0]
+        email_notification = []
+        phone_notification = []
+        is_phone_verified, phone_grace = self.is_phone_verified()
+        is_email_verified, email_grace = self.is_email_verified()
+        if not is_phone_verified:
+            # TODOs: Check also from user instance(is_phone_no_verified)
+            # For development its ok
+            phone_notification.extend(['Verify Phone', True,
+                'Hi, Your email is unverifed, Please verify your phone in :%s day(s) ' % phone_grace, now])  # noqa
+        if not is_email_verified:
+            # TODOs: Check also from user instance(is_email_verified)
+            # For development its ok
+            email_notification.extend(['Verify Email', True,
+                'Hi, Your email is unverifed, Please verify your email in :%s day(s)' % email_grace, now])  # noqa
+        return phone_notification, email_notification
 
 
 class Academic(models.Model):

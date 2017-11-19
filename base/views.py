@@ -11,7 +11,8 @@ from base.forms import (
     LoginForm, SignUPForm, ProfileForm, ExpenseForm
 )
 from base.models import User
-from base.methods import save_registration_form, verify_user, logout
+from base.methods import (
+    save_registration_form, verify_user, logout)
 from django.contrib import messages
 
 
@@ -88,9 +89,12 @@ def login_api(request, data):
 @is_authenticated
 def diary_home(request, user):
     expenses_form = ExpenseForm()
+    phone_notif, email_notif = user.get_verification_notification()
+    notifications = [phone_notif, email_notif]
     return render(request, 'user_board.html', {
         'user': user,
-        'expenses_form': expenses_form
+        'expenses_form': expenses_form,
+        'notifications': notifications
     })
 
 
@@ -103,5 +107,4 @@ def logout_user(request, user):
 @post
 @csrf_exempt
 def add_expenses(request, data):
-    import pdb; pdb.set_trace()
     return redirect('/')
