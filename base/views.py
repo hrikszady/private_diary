@@ -92,9 +92,8 @@ def diary_home(request, user):
     expenses_form = ExpenseForm()
     verify_notif = user.get_verification_notification()
     for notify in verify_notif:
-        if len(notify) == 0:
-            continue
-        notifications.append(notify)
+        if len(notify) != 0:
+            notifications.append(notify)
     return render(request, 'user_board.html', {
         'user': user,
         'expenses_form': expenses_form,
