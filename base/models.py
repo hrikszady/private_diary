@@ -252,7 +252,9 @@ class Guest(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            Guest.objects.get(id=self.id)
+            current = Guest.objects.get(id=self.id)
+            if current.reference_no == self.reference_no:
+                super(Guest, self).save(*args, **kwargs)
             self.reference_no = self.get_or_create_reference_no()
         except Guest.DoesNotExist:
             self.reference_no = self.get_or_create_reference_no()
