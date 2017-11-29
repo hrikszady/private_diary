@@ -47,6 +47,7 @@ class User(models.Model):
                 self.reference_no = self.get_or_create_reference_no()
         super(User, self).save(*args, **kwargs)
 
+    @staticmethod
     def check_password(self, password):
         """Check hased password. Using bcrypt,
         the salt is saved into the hash itself
@@ -272,3 +273,20 @@ class Guest(models.Model):
             guest=self, reference_no=reference_no,
             purpose='User Registration')
         return reference_no
+
+class Work_Experience(models.Model):
+    """docstring for Work_Experience"""
+    user = models.ForeignKey('User')
+    organization = models.CharField(max_length=64)
+    designation = models.CharField(max_length=64)
+    joing_date = models.DateField(null=True,blank=False)
+    leaving_date = models.DateField(null=True,blank=False)
+    Role = models.CharField(max_length=64)
+
+
+class Extra_Curricular_Activities(models.Model):
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
+    achievement = models.CharField(max_length=64)
+    source = models.CharField(max_length=128)
+    details = models.TextField()
