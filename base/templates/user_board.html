@@ -20,7 +20,7 @@
         <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
           <li class="nav-item active" data-toggle="tooltip" data-placement="right" title="Dashboard">
               <span class="nav-link-text">
-                <img class="user-pic" src="http://localhost:8000/media/{{user.user_pic}}">
+                <img class="user-pic" src="/media/{{user.user_pic}}">
               </span>
           </li>
           <li class="nav-item active header-menu" data-toggle="tooltip" data-placement="right" title="Dashboard">
@@ -384,6 +384,12 @@
       $('.hide_banner').not(':first').hide(200);
       $('a').click(function() {
           var id = $(this).attr('href');
+          var exclude_aaray = ['#railway_collapse', '#expenses_collapse', '#collapse_settings']
+          for (exclude_id in exclude_aaray) {
+            if (id == exclude_aaray[exclude_id]) {
+            return
+          }
+        }
           $(id).show(200);
           $('.hide_banner').not(id).hide(200);
         });
