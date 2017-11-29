@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Diary</title>
-    <link rel="stylesheet" type="text/css" href="/static/vendor/bootstrap/css/bootstrap.min.css">
-    <link href="/static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="/static/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
-    <link href="/static/css/sb-admin.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/vendor/bootstrap/css/bootstrap.min.css" />
+    <link href="/static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="/static/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
+    <link href="/static/css/sb-admin.css" rel="stylesheet" />
   </head>
   <body class="fixed-nav sticky-footer bg-dark" id="page-top">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
@@ -79,7 +80,7 @@
             </a>
             <ul class="sidenav-second-level collapse" id="expenses_collapse">
               <li class="sub-menu-hriks">
-                <a href="static-nav.html">
+                <a href="#add_expense" id="add_expense">
                   <i class="fa fa-fw a fa-inr"></i>
                   Add Expenses</a>
               </li>
@@ -316,7 +317,7 @@
           </div>
         </div>
         <!-- Home Div ends here-->
-        <!-- Diary Diff starts from here-->
+        <!-- Diary Div starts from here-->
           <div id="diary_div" class="hide_banner">
            <div class="card mb-3">
               <div class="card-header">
@@ -331,7 +332,24 @@
               </div>
             </div>
           </div>
-        <!-- Diary Diff ends here -->
+        <!-- Diary Div ends here -->
+        <!-- Add Expense Div starts from here-->
+          <div id="add_expense" class="hide_banner">
+          dskgkglj
+           <div class="card mb-3">
+              <div class="card-header">
+               <i class="fa fa-book"></i>
+                Expense | Add Expenses
+              </div>
+              <div class="card-body">
+                <canvas id="myAreaChart" width="100%" height="30"></canvas>
+              </div>
+              <div class="card-footer small text-muted">
+               Updated yesterday at 11:59 PM
+              </div>
+            </div>
+          </div>
+        <!-- Add Expense Div ends here -->
       </div>
       <!-- /.container-fluid -->
     </div>
