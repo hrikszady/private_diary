@@ -47,7 +47,6 @@ class User(models.Model):
                 self.reference_no = self.get_or_create_reference_no()
         super(User, self).save(*args, **kwargs)
 
-    @staticmethod
     def check_password(self, password):
         """Check hased password. Using bcrypt,
         the salt is saved into the hash itself
@@ -186,7 +185,7 @@ class Expense(models.Model):
     """
     user = models.ForeignKey('User')
     amount = models.FloatField(default=0)
-    expense_date = models.DateTimeField(auto_now_add=False)
+    expense_date = models.DateField(auto_now_add=False)
     CATEGORY_CHOICES = [
         ("select", "CHOOSE"), ("food", "FOOD"),
         ("bill_payments", "BILL & PAYMENTS"),

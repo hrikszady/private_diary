@@ -55,7 +55,6 @@ def save_registration_form(self):
 
 @csrf_exempt
 def verify_user(self, request):
-    password = self.password
     try:
         user = User.objects.get(username=self.username)
     except User.DoesNotExist:
@@ -74,7 +73,7 @@ def verify_user(self, request):
         messages.error(
             request, 'Please. Verify your Phone no !')
         return False, self
-    if user.check_password(str(password)):
+    if user.check_password(str(self.password)):
         user.clear_session(request)
         request.session['user_token'] = user.generate_session_id()
         return True, user
