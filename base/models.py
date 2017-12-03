@@ -47,7 +47,6 @@ class User(models.Model):
                 self.reference_no = self.get_or_create_reference_no()
         super(User, self).save(*args, **kwargs)
 
-    @staticmethod
     def check_password(self, password):
         """Check hased password. Using bcrypt,
         the salt is saved into the hash itself
