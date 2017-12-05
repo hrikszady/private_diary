@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from django.contrib import admin
 from base.models import (
-    User, Academic, ParentalInfo, Document, Expense, Memo,
+    User, Academic, ParentalInfo, Document, ExpenseManager, Memo,
     Reference_Number, Guest, Credentials
 )
 
@@ -76,7 +76,8 @@ class DocumentAdmin(admin.ModelAdmin):
 class ExpenseAdmin(admin.ModelAdmin):
     """ParentalInfo will be shown only for selected users"""
     list_display = (
-        'user', 'amount', 'expense_date', 'category'
+        'user', 'target_mode', 'target_amount', 'left_amount',
+        'month'
     )
     search_fields = ('user__name', 'user__phone_no', 'user__email', 'amount')
     ordering = ('-user__created',)
@@ -140,7 +141,7 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Academic, AcademicAdmin)
 admin.site.register(ParentalInfo, ParentalInfoAdmin)
 admin.site.register(Document, DocumentAdmin)
-admin.site.register(Expense, ExpenseAdmin)
+admin.site.register(ExpenseManager, ExpenseAdmin)
 admin.site.register(Memo, MemoAdmin)
 admin.site.register(Guest, GuestAdmin)
 admin.site.register(Reference_Number, Reference_NumberAdmin)

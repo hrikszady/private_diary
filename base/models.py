@@ -179,11 +179,33 @@ class Document(models.Model):
     digital_validation = models.BooleanField(default=False)
 
 
-class Expense(models.Model):
+class ExpenseManager(models.Model):
     """
     User can keep track for their expenses
     """
     user = models.ForeignKey('User')
+    comment = models.CharField(blank=True, null=True, max_length=64)
+    TARGET_MODE_CHOICE = [
+        ('target_mode', 'Target Mode'),
+        ('basic_mode', 'Basic Mode'),
+    ]
+    target_mode = models.CharField(
+        default='target_mode', choices=TARGET_MODE_CHOICE, max_length=32)
+    target_amount = models.FloatField(default=0.0)
+    left_amount = models.FloatField(default=0.0)
+    savings = models.FloatField(default=0.0)
+    created = models.DateTimeField(auto_now_add=True)
+    month = models.DateField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        current = ExpenseManager.objects.get(id=self.id)  # noqa
+
+        super(ExpenseManager, self).save(*args, **kwargs)
+
+
+class ExpenseEntry(models.Model):
+    manager = models.ForeignKey('ExpenseManager')
+    target_amount = models.FloatField(default=0)
     amount = models.FloatField(default=0)
     expense_date = models.DateField(auto_now_add=False)
     CATEGORY_CHOICES = [
@@ -197,8 +219,14 @@ class Expense(models.Model):
     category = models.CharField(
         default="select", choices=CATEGORY_CHOICES, max_length=12)
     description = models.TextField()
-    comment = models.CharField(blank=True, null=True, max_length=64)
     created = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        manager = self.manager  # noqa
+        manager.left_amount -= self.amount
+        manager.savings += self.target_amount - self.amount
+        manager.save()
+        super(ExpenseEntry, self).save(*args, **kwargs)
 
 
 class Memo(models.Model):
@@ -273,13 +301,14 @@ class Guest(models.Model):
             purpose='User Registration')
         return reference_no
 
+
 class Work_Experience(models.Model):
     """docstring for Work_Experience"""
     user = models.ForeignKey('User')
     organization = models.CharField(max_length=64)
     designation = models.CharField(max_length=64)
-    joing_date = models.DateField(null=True,blank=False)
-    leaving_date = models.DateField(null=True,blank=False)
+    joing_date = models.DateField(null=True, blank=False)
+    leaving_date = models.DateField(null=True, blank=False)
     Role = models.CharField(max_length=64)
 
 
