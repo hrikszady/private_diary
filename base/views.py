@@ -8,7 +8,7 @@ from base.decorator import (
     is_authenticated, is_unauthenticated
 )
 from base.forms import (
-    LoginForm, SignUPForm, ProfileForm, ExpenseForm
+    LoginForm, SignUPForm, ProfileForm, ExpenseManagerForm
 )
 from base.models import User
 from base.methods import (
@@ -89,15 +89,22 @@ def login_api(request, data):
 @is_authenticated
 def diary_home(request, user):
     notifications = list()
-    expenses_form = ExpenseForm()
+    manager = False
+    expensesManagerForm = ExpenseManagerForm()
+    expenseEntryForm = ExpemseEntryForm()
     verify_notif = user.get_verification_notification()
     for notify in verify_notif:
         if len(notify) != 0:
             notifications.append(notify)
+    today = datetime.now().date()
+    expense_manager = ExpenseManager.objects.filter(user=user, month=today)
+    if not expense_manager.exists():
+        manager = True
     return render(request, 'user_board.html', {
         'user': user,
-        'expenses_form': expenses_form,
-        'notifications': notifications
+        'expensesManagerForm': expensesManagerForm,
+        'notifications': notifications,
+        'manager': manager
     })
 
 
