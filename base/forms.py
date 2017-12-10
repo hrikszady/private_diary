@@ -70,3 +70,10 @@ class ExpenseForm(forms.Form):
     category = forms.CharField(required=True)
     description = forms.CharField(required=False)
     comment = forms.CharField(required=False)
+
+
+class ExpenseManagerForm(forms.Form):
+    """Form for Expense manager for ExpenseForm"""
+    target_mode = forms.CharField(required=True)
+    target_amount = forms.CharField(required=True)
+    comment = forms.CharField(required=False)

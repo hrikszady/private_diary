@@ -197,11 +197,6 @@ class ExpenseManager(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     month = models.DateField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):
-        current = ExpenseManager.objects.get(id=self.id)  # noqa
-
-        super(ExpenseManager, self).save(*args, **kwargs)
-
 
 class ExpenseEntry(models.Model):
     manager = models.ForeignKey('ExpenseManager')
