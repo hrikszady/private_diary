@@ -63,7 +63,7 @@ class Academic(forms.Form):
     location = forms.CharField(max_length=64)
 
 
-class ExpenseForm(forms.Form):
+class ExpenseEntryForm(forms.Form):
     """Form for Expense manager for ExpenseForm"""
     amount = forms.CharField(required=True)
     date = forms.DateField(required=True)

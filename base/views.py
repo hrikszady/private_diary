@@ -3,14 +3,16 @@ from __future__ import unicode_literals
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
+from datetime import datetime
 from base.decorator import (
     get_method as get, post_method as post, guest,
     is_authenticated, is_unauthenticated
 )
 from base.forms import (
-    LoginForm, SignUPForm, ProfileForm, ExpenseManagerForm
+    LoginForm, SignUPForm, ProfileForm, ExpenseManagerForm,
+    ExpenseEntryForm
 )
-from base.models import User
+from base.models import User, ExpenseManager
 from base.methods import (
     save_registration_form, verify_user, logout)
 from django.contrib import messages
@@ -91,13 +93,13 @@ def diary_home(request, user):
     notifications = list()
     manager = False
     expensesManagerForm = ExpenseManagerForm()
-    expenseEntryForm = ExpemseEntryForm()
+    expenseEntryForm = ExpenseEntryForm()
     verify_notif = user.get_verification_notification()
     for notify in verify_notif:
         if len(notify) != 0:
             notifications.append(notify)
-    today = datetime.now().date()
-    expense_manager = ExpenseManager.objects.filter(user=user, month=today)
+    today = datetime.now().date().month
+    expense_manager = ExpenseManager.objects.filter(user=user, month__month=today)
     if not expense_manager.exists():
         manager = True
     return render(request, 'user_board.html', {
