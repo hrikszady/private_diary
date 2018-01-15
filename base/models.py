@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.utils.crypto import get_random_string
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from datetime import datetime
+import calendar
+import math
 import uuid
 
 
@@ -183,6 +186,7 @@ class ExpenseManager(models.Model):
     """
     User can keep track for their expenses
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey('User')
     comment = models.CharField(blank=True, null=True, max_length=64)
     TARGET_MODE_CHOICE = [
@@ -197,11 +201,19 @@ class ExpenseManager(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     month = models.DateField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        try:
+            current = ExpenseManager.objects.get(id=self.id)  # noqa
+        except ExpenseManager.DoesNotExist:
+            if self.target_mode == 'target_mode':
+                self.left_amount = self.target_amount
+        super(ExpenseManager, self).save(*args, **kwargs)
+
 
 class ExpenseEntry(models.Model):
     manager = models.ForeignKey('ExpenseManager')
-    target_amount = models.FloatField(default=0)
-    amount = models.FloatField(default=0)
+    target_amount = models.FloatField(default=0.0)
+    amount = models.FloatField(default=0.0)
     expense_date = models.DateField(auto_now_add=False)
     CATEGORY_CHOICES = [
         ("select", "CHOOSE"), ("food", "FOOD"),
@@ -217,11 +229,18 @@ class ExpenseEntry(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
+        self.target_amount = self.getTargetAmount()
         manager = self.manager  # noqa
         manager.left_amount -= self.amount
         manager.savings += self.target_amount - self.amount
         manager.save()
         super(ExpenseEntry, self).save(*args, **kwargs)
+
+    def getTargetAmount(self):
+        now = datetime.now()
+        days_left = calendar.monthrange(
+            now.year, now.month)[1] - now.day
+        return math.ceil(self.manager.left_amount / days_left)
 
 
 class Memo(models.Model):
