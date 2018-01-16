@@ -33,14 +33,6 @@ def post_method(
     return wrap
 
 
-def bad_request(request):
-    response = {
-        "errorCode": "403",
-        "message": "Bad Request"
-    }
-    return JsonResponse(response, status=403)
-
-
 def guest(
         f, methods={"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0}):
     def wrap(request, *args, **kwargs):
@@ -80,3 +72,11 @@ def is_unauthenticated(
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
     return wrap
+
+
+def bad_request(request):
+    response = {
+        "errorCode": "403",
+        "message": "Bad Request"
+    }
+    return JsonResponse(response, status=403)
